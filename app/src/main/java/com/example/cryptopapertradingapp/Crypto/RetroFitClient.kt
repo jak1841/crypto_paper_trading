@@ -1,5 +1,6 @@
-package com.example.cryptopapertradingapp.Crypto
+package com.example.cryptopapertradingapp.crypto
 
+import com.example.cryptopapertradingapp.crypto.data.api.coingecko.CoinGeckoApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -13,7 +14,7 @@ object RetroFitClient {
             .build()
     }
 
-    val apiService: CoinGeckoApi by lazy {
-        retrofit.create(CoinGeckoApi::class.java)
+    val coinInfoApiService: CoinGeckoApiService by lazy {
+        retrofit.create(CoinGeckoApiService::class.java)
     }
 }

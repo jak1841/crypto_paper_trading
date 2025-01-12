@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
 }
 
 android {
@@ -53,6 +54,11 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.runtime.livedata)
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation(libs.androidx.room.ktx)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

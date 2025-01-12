@@ -1,16 +1,36 @@
 package com.example.cryptopapertradingapp
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cryptopapertradingapp.Crypto.RetroFitClient
+import com.example.cryptopapertradingapp.crypto.CryptoRepositoryContainer
+import com.example.cryptopapertradingapp.crypto.domain.usecase.GetCryptoSearchSuggestionUseCase
 import kotlinx.coroutines.launch
 
 class HomeScreenViewModel : ViewModel() {
 
-    fun printToScreen() {
+    private val cryptoRepository by lazy { CryptoRepositoryContainer.getCryptoRepository() }
+    private val _cryptoSearchSuggestions = MutableLiveData<List<String>>()
+    val cryptoSearchSuggestions: LiveData<List<String>> get() = _cryptoSearchSuggestions
+
+    fun updateSearchSuggestion(searchQuery: String) {
+        if (searchQuery == EMPTY_VALUE) {
+            _cryptoSearchSuggestions.value = emptyList()
+            return
+        }
+        val useCase = GetCryptoSearchSuggestionUseCase(cryptoRepository)
         viewModelScope.launch {
-            val coins = RetroFitClient.apiService.getAllCoins()
+            _cryptoSearchSuggestions.value = useCase.execute(searchQuery)
+        }
+    }
+
+    fun printToScreen() {
+        Log.d(TAG, "printing the items to the screen")
+        viewModelScope.launch {
+            cryptoRepository.fetchAndSaveAllCoinInfos()
+            val coins = cryptoRepository.getAllCoinInfos()
             for (coin in coins) {
                 Log.d(TAG, coin.toString())
             }
@@ -19,6 +39,7 @@ class HomeScreenViewModel : ViewModel() {
 
     companion object {
         const val TAG = "HomeScreenViewModel"
+        const val EMPTY_VALUE = ""
     }
 
 }
