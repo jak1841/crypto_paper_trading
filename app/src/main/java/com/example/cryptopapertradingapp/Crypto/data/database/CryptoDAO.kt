@@ -8,17 +8,17 @@ import androidx.room.Query
 @Dao
 interface CryptoDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(coinInfo: CoinInfoEntity)
+    suspend fun insert(coinInfo: CoinBasicInfoEntity)
 
     @Query("SELECT * FROM coin_info WHERE id = :id")
-    suspend fun getCryptoById(id: String): CoinInfoEntity?
+    suspend fun getCryptoById(id: String): CoinBasicInfoEntity?
 
     @Query("SELECT * FROM coin_info")
-    suspend fun getAllCryptos(): List<CoinInfoEntity>
+    suspend fun getAllCryptos(): List<CoinBasicInfoEntity>
 
     @Query("DELETE FROM coin_info")
     suspend fun deleteAll()
 
     @Query("SELECT * FROM coin_info WHERE name LIKE :name")
-    suspend fun searchCryptoByName(name: String): List<CoinInfoEntity>
+    suspend fun searchCryptoByName(name: String): List<CoinBasicInfoEntity>
 }

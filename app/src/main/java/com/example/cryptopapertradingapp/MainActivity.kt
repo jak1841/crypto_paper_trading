@@ -25,7 +25,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.cryptopapertradingapp.crypto.presentation.ui.LineGraphProvider.AndroidCryptoLineGraphProvider
+import com.example.cryptopapertradingapp.crypto.presentation.ui.LineGraphProvider.CryptoLineGraphProvider
 import com.example.cryptopapertradingapp.ui.theme.CryptoPaperTradingAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -54,15 +57,23 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             modifier = modifier
         )
         MyButton(viewModel)
+        CryptoLineGraph(viewModel)
         TextFieldWithSuggestions(viewModel)
     }
 }
 
 @Composable
 fun MyButton(viewModel: HomeScreenViewModel) {
-    Button(onClick = { viewModel.printToScreen() }) {
+    Button(onClick = { viewModel.updateCryptoMarketHistory("bitcoin", "usd", 30) }) {
         Text("Click Me!")
     }
+}
+
+@Composable
+fun CryptoLineGraph(viewModel: HomeScreenViewModel) {
+    val item = AndroidCryptoLineGraphProvider() as CryptoLineGraphProvider
+    val prices by viewModel.cryptMarketHistory.observeAsState(emptyList())
+    item.getLineGraph(prices, Color.Red)
 }
 
 @Composable
